@@ -1,6 +1,5 @@
 
 
-<div style="text-align: center;">
 <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
 <rect0 width="400" height="200" x="0" y="0" fill="#fff" />
     
@@ -21,7 +20,7 @@
 <path d="M300,40 L400,80 L400,120 L300,80 Z" stroke="none" fill="#888822" />
 <path d="M200,160 L400,80 L400,120 L200,200 Z" stroke="none" fill="#bbbb33" />
 </svg>
-</div>
+
 
 
 
