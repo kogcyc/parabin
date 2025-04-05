@@ -1,22 +1,22 @@
-# 📦 parabox
+# parabin
 
-**parabox** is a parametric generator for 3D-printable modular drawer organizers, inspired by the [Gridfinity](https://github.com/zackfreedman/gridfinity) system.
+**parabin** is a parametric generator for 3D-printable modular drawer organizers, inspired by the [Gridfinity](https://github.com/zackfreedman/gridfinity) system.
 
 Write one command, and it generates:
-- 🧱 A `.scad` file (OpenSCAD)
-- 📦 An optional `.stl` for printing
+- A `.scad` file (OpenSCAD)
+- An optional `.stl` for printing
 
-Parabox is flexible, fast, and totally scriptable.
+parabin is flexible, fast, and totally scriptable.
 
 ---
 
-## ✨ Features
+## Features
 
-- 📐 Grid-based bin sizing (e.g., `2x3`, `1x1`)
-- 🕳 Custom screw hole placement on any side
-- 🔲 Optional floor (`--no-bottom` flag)
-- 🧼 Clean STL output (with `--stl` or `--stl-ofn`)
-- 🧠 All OpenSCAD output is parametric and readable
+- Grid-based bin sizing (e.g., `2x3`, `1x1`)
+- Custom screw hole placement on any side
+- Optional floor (`--no-bottom` flag)
+- Clean STL output (with `--stl` or `--stl-ofn`)
+- All OpenSCAD output is parametric and readable
 
 ---
 
@@ -27,13 +27,13 @@ Parabox is flexible, fast, and totally scriptable.
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ```bash
 python3 generate_bin.py SIZE HEIGHT HOLES ZHEIGHT [options]
 ```
 
-### 💡 Example:
+### Example:
 
 ```bash
 python3 generate_bin.py 2x3 28 a0,c1 10 \
@@ -60,7 +60,7 @@ This creates:
 
 ---
 
-## 🤖 Roadmap
+## Roadmap
 
 - [ ] Snap-fit lids
 - [ ] Gridfinity baseplate pegs/magnets
@@ -71,14 +71,7 @@ This creates:
 
 ---
 
-## 📚 License
-
-MIT — Parabox is free to use, remix, and share.  
-Let’s make organizing drawers a beautiful act of code.
-
----
-
-## 🙌 Credits
+## Credits
 
 - Inspired by [Zack Freedman’s Gridfinity](https://github.com/zackfreedman/gridfinity)
 - Powered by [OpenSCAD](https://openscad.org/) and [Python](https://www.python.org/)
