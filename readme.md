@@ -1,6 +1,6 @@
-<div align="left">
+<span align="left">
   <img src="logo.svg" width="400" alt="parabin logo">
-</div>
+</span>
 
 # parabin
 
