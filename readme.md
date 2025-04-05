@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
   <img src="logo.svg" width="400" alt="parabin logo">
 </p>
 
