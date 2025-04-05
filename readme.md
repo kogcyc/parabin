@@ -1,7 +1,7 @@
 
 
 <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-<rect0 width="400" height="200" x="0" y="0" fill="#fff" />
+
     
 <path d="M00,120 L100,80 L200,120 L100,160 Z" stroke="none" fill="#991111" />
 <path d="M100,80 L200,40 L300,80 L200,120 Z" stroke="none" fill="#222299" />
