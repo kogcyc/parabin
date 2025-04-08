@@ -10,16 +10,16 @@ def generate_bin_scad(
     filename="bin.scad",
     export_stl=False,
     stl_ofn=None,
-    no_bottom=False
+    no_bottom=False,
+    hole_diameter=6.0
 ):
     grid = 42
     wall = 2
-    screw_radius = 3  # 6mm diameter
+    screw_radius = hole_diameter / 2
     screw_depth = wall + 2
     fn = 64
     floor_thickness = 0 if no_bottom else 2
 
-    # Parse size string like "2x3"
     try:
         width, depth = map(int, size_str.lower().split("x"))
     except:
@@ -31,7 +31,6 @@ def generate_bin_scad(
     hollow_h = bin_h - floor_thickness
 
     scad = []
-
     scad.append("difference() {")
     scad.append(f"  cube([{bin_w}, {bin_d}, {bin_h}]);")
     scad.append(f"  translate([{wall}, {wall}, {floor_thickness}])")
@@ -54,7 +53,7 @@ def generate_bin_scad(
             scad.append(f"    rotate([90, 0, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
 
         elif side == 'c' and index < width:
-            x = ((width - 1 - index) + 0.5) * grid  # Flipped left-to-right
+            x = ((width - 1 - index) + 0.5) * grid
             y = bin_d
             scad.append(f"  translate([{x}, {y}, {screw_z}])")
             scad.append(f"    rotate([90, 0, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
@@ -67,7 +66,7 @@ def generate_bin_scad(
 
         elif side == 'd' and index < depth:
             x = 0
-            y = ((depth - 1 - index) + 0.5) * grid  # Flipped left-to-right
+            y = ((depth - 1 - index) + 0.5) * grid
             scad.append(f"  translate([{x}, {y}, {screw_z}])")
             scad.append(f"    rotate([0, 90, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
 
@@ -82,25 +81,24 @@ def generate_bin_scad(
 
     if export_stl:
         stl_filename = stl_ofn if stl_ofn else os.path.splitext(filename)[0] + ".stl"
-        print(f"🛠 Converting to STL...")
+        print("🛠 Converting to STL...")
         subprocess.run(["openscad", "-o", stl_filename, filename], check=True)
         print(f"✅ STL written to {stl_filename}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parabin: Parametric 3D printable bin generator.")
     parser.add_argument("size", help="Bin size in grid units, e.g., 2x7")
     parser.add_argument("bin_height", type=float, help="Bin height in mm")
-    parser.add_argument("screw_sides", help="Comma-separated screw hole codes like a0,b2")
-    parser.add_argument("screw_z", type=float, help="Screw hole center height in mm")
+    parser.add_argument("screw_sides", help="Comma-separated screw hole codes like a0,b2, or 'none'")
+    parser.add_argument("--screw-z", type=float, help="Screw hole center height in mm (default: half of bin height)")
     parser.add_argument("-o", "--output", default="bin.scad", help="SCAD output filename")
     parser.add_argument("--stl", action="store_true", help="Also export STL using OpenSCAD")
     parser.add_argument("--stl-ofn", help="Custom STL output filename (e.g., mybin.stl)")
     parser.add_argument("--no-bottom", action="store_true", help="Generate bin without a bottom floor")
+    parser.add_argument("--hole-diameter", type=float, default=6.0, help="Diameter of screw holes in mm (default: 6.0)")
 
     args = parser.parse_args()
 
-    # Parse and sort screw hole codes consistently
     def sort_screw_codes(codes):
         def sort_key(code):
             side = code[0].lower()
@@ -108,15 +106,17 @@ if __name__ == "__main__":
             return (side, index)
         return sorted((s.strip() for s in codes.split(",")), key=sort_key)
 
-    screw_list = sort_screw_codes(args.screw_sides)
+    screw_list = [] if args.screw_sides.strip().lower() == "none" else sort_screw_codes(args.screw_sides)
+    screw_z_val = args.screw_z if args.screw_z is not None else args.bin_height / 2.0
 
     generate_bin_scad(
         size_str=args.size,
         bin_height=args.bin_height,
         screw_sides=screw_list,
-        screw_z=args.screw_z,
+        screw_z=screw_z_val,
         filename=args.output,
         export_stl=args.stl,
         stl_ofn=args.stl_ofn,
-        no_bottom=args.no_bottom
+        no_bottom=args.no_bottom,
+        hole_diameter=args.hole_diameter
     )
