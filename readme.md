@@ -4,7 +4,7 @@
 
 # parabin
 
-**Parabin** is a command-line Python generator for parametric 3D-printed drawer organizers. It creates OpenSCAD files with optional screw holes, bottom floors, and rounded corners — perfect for organizing with style and precision.
+**parabin** is a command-line Python generator for parametric 3D-printed drawer organizers. It creates OpenSCAD files with optional screw holes, bottom floors, and rounded corners — perfect for organizing with style and precision.
 
 ## Features
 
