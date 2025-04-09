@@ -6,7 +6,7 @@ def generate_bin_scad(
     size_str,
     bin_height,
     screw_sides,
-    screw_z,
+    screw_z=None,
     filename="bin.scad",
     export_stl=False,
     stl_ofn=None,
@@ -29,6 +29,10 @@ def generate_bin_scad(
     bin_d = depth * grid
     bin_h = bin_height
     hollow_h = bin_h - floor_thickness
+
+    # Default screw_z to mid-height if not given
+    if screw_z is None:
+        screw_z = bin_height / 2
 
     scad = []
 
@@ -54,7 +58,7 @@ def generate_bin_scad(
             scad.append(f"    rotate([90, 0, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
 
         elif side == 'c' and index < width:
-            x = ((width - 1 - index) + 0.5) * grid  # Flipped left-to-right
+            x = ((width - 1 - index) + 0.5) * grid
             y = bin_d
             scad.append(f"  translate([{x}, {y}, {screw_z}])")
             scad.append(f"    rotate([90, 0, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
@@ -67,7 +71,7 @@ def generate_bin_scad(
 
         elif side == 'd' and index < depth:
             x = 0
-            y = ((depth - 1 - index) + 0.5) * grid  # Flipped left-to-right
+            y = ((depth - 1 - index) + 0.5) * grid
             scad.append(f"  translate([{x}, {y}, {screw_z}])")
             scad.append(f"    rotate([0, 90, 0]) cylinder(h={screw_depth}, r={screw_radius}, $fn={fn}, center=true);")
 
@@ -91,8 +95,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parabin: Parametric 3D printable bin generator.")
     parser.add_argument("size", help="Bin size in grid units, e.g., 2x7")
     parser.add_argument("bin_height", type=float, help="Bin height in mm")
-    parser.add_argument("screw_sides", help="Comma-separated screw hole codes like a0,b2")
-    parser.add_argument("screw_z", type=float, help="Screw hole center height in mm")
+    parser.add_argument("screw_sides", help="Comma-separated screw hole codes like a0,b2 or 'none'")
+    parser.add_argument("--screw-z", type=float, help="Screw hole center height in mm (default: bin_height / 2)")
     parser.add_argument("-o", "--output", default="bin.scad", help="SCAD output filename")
     parser.add_argument("--stl", action="store_true", help="Also export STL using OpenSCAD")
     parser.add_argument("--stl-ofn", help="Custom STL output filename (e.g., mybin.stl)")
@@ -100,8 +104,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Parse and sort screw hole codes consistently
     def sort_screw_codes(codes):
+        codes = codes.strip().lower()
+        if codes == "none":
+            return []
         def sort_key(code):
             side = code[0].lower()
             index = int(code[1:])
