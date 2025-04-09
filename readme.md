@@ -4,86 +4,103 @@
 
 # parabin
 
-**parabin** is a command-line Python generator for parametric 3D-printed drawer organizers. It creates OpenSCAD files with optional screw holes, bottom floors, and rounded corners — perfect for organizing with style and precision.
+**parabin** is a parametric 3D bin generator for Gridfinity-style modular organizers.
 
-## Features
-
-- Parametric sizing using Gridfinity-style `42 mm` grid units  
-- Rounded vertical edges (default, via `minkowski()`)  
-- Screw hole support with side-specific placement  
-- Optional bottom floor (for open trays)  
-- STL export via OpenSCAD CLI  
-- Custom wall thickness logic and accurate cavity subtraction  
-
-## Requirements
-
-- Python 3.x  
-- [OpenSCAD](https://openscad.org/) with command-line support
-
-### macOS install
-
-```bash
-brew install --cask openscad
-```
-
-## Usage
-
-```bash
-python3 generate_bin.py SIZE HEIGHT SCREW_SIDES SCREW_Z [options]
-```
-
-### Positional Arguments
-
-| Argument       | Description                                                   |
-|----------------|---------------------------------------------------------------|
-| `SIZE`         | Bin size in grid units like `2x3`                              |
-| `HEIGHT`       | Height of the bin in mm                                        |
-| `SCREW_SIDES`  | Comma-separated screw hole codes (e.g., `a0,b1`, or `none`)    |
-| `SCREW_Z`      | Vertical height of screw hole centers in mm                   |
-
-### Optional Flags
-
-| Option                 | Description                                             |
-|------------------------|---------------------------------------------------------|
-| `-o`, `--output`       | SCAD output filename (default: `bin.scad`)              |
-| `--stl`                | Also export STL file using OpenSCAD                     |
-| `--stl-ofn`            | Custom STL output filename                              |
-| `--no-bottom`          | Remove the bottom floor of the bin                      |
-| `--hole-diameter`      | Set screw hole diameter in mm (default: `6.0`)          |
-| `--not-rounded-edges`  | Use sharp cube edges (disables rounding via `minkowski()`) |
-
-## Examples
-
-### A 1×2 bin, 25 mm tall, with screws on sides A and C:
-
-```bash
-python3 generate_bin.py 1x2 25 a0,c0 12
-```
-
-### A 3×3 open bin with no screw holes:
-
-```bash
-python3 generate_bin.py 3x3 20 none 10 --no-bottom
-```
-
-### Export to STL:
-
-```bash
-python3 generate_bin.py 2x2 30 a0,b1 15 --stl --stl-ofn mybox.stl
-```
-
-## Output
-
-Parabin generates a `.scad` file which you can view or edit in OpenSCAD.  
-You can also export an `.stl` file automatically with the `--stl` flag.
-
-These models are ideal for printing modular organizers on any FDM printer.
-
-## License
-
-MIT License.  
-Use, remix, and share freely.
+It generates `.scad` and optional `.stl` files using OpenSCAD. You can specify bin size, height, whether it has a floor, and which sides get screw holes.
 
 ---
 
-Made with ❤️ and Python.
+## ✅ Features
+
+- Define bin size in grid units (e.g., `2x3`)
+- Optional floor (`--no-bottom`)
+- Add screw holes on any side
+- Automatically places screw holes at mid-height if not specified
+- STL export via OpenSCAD
+
+---
+
+## 📦 Requirements
+
+- Python 3
+- [OpenSCAD](https://openscad.org) in your system path (for STL export)
+
+---
+
+## 🧰 Usage
+
+```bash
+python3 generate_bin.py SIZE HEIGHT SCREWS [--screw-z Z] [options]
+```
+
+### Positional arguments:
+
+| Argument     | Description                                      |
+|--------------|--------------------------------------------------|
+| `SIZE`       | Bin size in format `WxD`, e.g., `2x3`            |
+| `HEIGHT`     | Bin height in mm                                 |
+| `SCREWS`     | Screw placement codes, e.g., `a0,b2` or `none`   |
+
+### Screw code legend:
+
+- `a` — front side
+- `b` — right side
+- `c` — back side
+- `d` — left side
+- Number is index (starting at 0)
+
+For example:
+```bash
+python3 generate_bin.py 2x3 50 a0,b2
+```
+This places screws on:
+- front side, cell 0
+- right side, cell 2
+
+### Optional arguments:
+
+| Option             | Description                                                              |
+|--------------------|--------------------------------------------------------------------------|
+| `--screw-z Z`       | Height of screw hole center in mm (default: half of bin height)         |
+| `-o FILE`           | SCAD output filename (default: `bin.scad`)                              |
+| `--stl`             | Export `.stl` via OpenSCAD                                               |
+| `--stl-ofn FILE`    | Custom name for STL output                                               |
+| `--no-bottom`       | Generate bin without a floor                                             |
+
+---
+
+## 💡 Examples
+
+Create a 3x4 bin, 60mm tall, with no screws and no bottom:
+```bash
+python3 generate_bin.py 3x4 60 none --no-bottom
+```
+
+Create a 1x2 bin, 40mm tall, screw on back (cell 0) and left (cell 1), screw holes at 25mm:
+```bash
+python3 generate_bin.py 1x2 40 c0,d1 --screw-z 25
+```
+
+Generate SCAD and STL:
+```bash
+python3 generate_bin.py 2x2 50 a0,b0 --stl
+```
+
+---
+
+## 📁 Output
+
+- `.scad` file describing the bin geometry
+- `.stl` file if `--stl` is used
+
+---
+
+## 🛠 About
+
+Parabin is designed for practical workshop organization using the Gridfinity modular standard. The bins print cleanly and are easily configurable via CLI.
+
+---
+
+## 🔗 License
+
+MIT — do what you like, but attribution is appreciated.
