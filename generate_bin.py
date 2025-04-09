@@ -39,7 +39,7 @@ def generate_bin_scad(
     scad.append("difference() {")
     scad.append(f"  cube([{bin_w}, {bin_d}, {bin_h}]);")
     scad.append(f"  translate([{wall}, {wall}, {floor_thickness}])")
-    scad.append(f"    cube([{bin_w - 2*wall}, {bin_d - 2*wall}, {hollow_h}]);")
+    scad.append(f"    cube([{bin_w - 2*wall}, {bin_d - 2*wall}, {hollow_h + 0.1}]);")
 
     for code in screw_sides:
         side = code[0].lower()
